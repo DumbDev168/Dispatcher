@@ -13,8 +13,10 @@ const colors: DesignSystemColors = {
   darkPrimary: '#297ab0',
   secondary: '#469c57', // green
   accent: '#fed330', // yellow
+  blackish0: Colors.rgba(20, 20, 20, 0.8),
   blackish: Colors.rgba(20, 20, 20, 1),
   blackish2: Colors.rgba(50, 50, 50, 1),
+  whitish0: Colors.rgba(250, 250, 250, 0.8),
   whitish: Colors.rgba(250, 250, 250, 1),
   whitish2: Colors.rgba(230, 230, 230, 1),
 };
@@ -22,11 +24,13 @@ const colors: DesignSystemColors = {
 const themes: Record<AppearanceMode, ThemeColors> = {
   light: {
     textColor: colors.blackish,
+    textColorLight: colors.blackish0,
     bgColor: colors.whitish,
     bg2Color: colors.whitish2,
   },
   dark: {
     textColor: colors.whitish,
+    textColorLight: colors.whitish0,
     bgColor: colors.blackish,
     bg2Color: colors.blackish2,
   },
@@ -65,6 +69,7 @@ export const configureDesignSystem = async (): PVoid => {
   Assets.loadAssetsGroup('icons', {
     icon: require('@assets/icon.png'),
     logo: require('@assets/logo.png'),
+    chat: require('@assets/chat.png'),
   });
 };
 

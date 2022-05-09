@@ -17,6 +17,7 @@ type AppearanceMode = 'light' | 'dark';
 type StatusBarStyle = 'light' | 'dark' | undefined;
 type ThemeColors = {
   textColor: string;
+  textColorLight: string;
   bgColor: string;
   bg2Color: string;
 };
@@ -34,6 +35,10 @@ type UILanguage = 'System' | 'English' | 'Russian';
 // Props
 type ExampleScreenProps = {
   value?: number;
+};
+
+type PreviousScreenProps = {
+  shouldPop?: boolean;
 };
 
 // Settings
