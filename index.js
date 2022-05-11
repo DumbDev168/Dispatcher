@@ -1,9 +1,6 @@
-/**
- * @format
- */
+import 'react-native-gesture-handler';
+import {registerRootComponent} from 'rnn-screens';
 
-import {AppRegistry} from 'react-native';
-import App from './App';
-import {name as appName} from './app.json';
+import {App, beforeStart} from './App';
 
-AppRegistry.registerComponent(appName, () => App);
+registerRootComponent(App, {beforeStart});
