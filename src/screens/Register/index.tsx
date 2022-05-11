@@ -1,22 +1,48 @@
 import React from "react"
-import { View, Text, Incubator, Colors } from "react-native-ui-lib"
-import { s, ms } from "react-native-size-matters"
+import { View, Text } from "react-native-ui-lib"
+import { ms } from "react-native-size-matters"
 import CustomButton from "@components/CustomButton";
 import { screens } from ".."
 import { ScreenComponent } from "rnn-screens"
 import CountryPicker from 'react-native-country-picker-modal'
-import { styles } from "@utils/customStyles"
+import { useForm } from "react-hook-form"
+import { yupResolver } from "@hookform/resolvers/yup"
+import * as yup from "yup"
+import CustomTextField from "@components/CustomTextField"
+
+interface IRegister {
+    username: string;
+    phone_number: string;
+    password: string;
+    password_confirmation: string;
+}
+
+const schema = yup.object().shape({
+    username: yup.string().min(4, 'Username must be at least 4 chars.').required('Please enter your username.'),
+    phone_number: yup.string().min(8, 'Please enter a valid phone number.').required('Please enter your phone number.'),
+    password: yup.string().min(6, 'Password requires at least 6 chars').required('Please enter your password'),
+    password_confirmation: yup.string().oneOf([yup.ref('password')], 'Password must be match').required('Please enter a password confiramtion')
+});
 
 
 
-const { TextField } = Incubator
 const Register: ScreenComponent<PreviousScreenProps> = ({ componentId, shouldPop }) => {
+
+    const { control, formState, handleSubmit } = useForm<IRegister>({
+        mode: "onChange",
+        resolver: yupResolver(schema)
+    })
+
+
+    const onSubmit = (data: IRegister) => {
+        console.warn('data', data)
+    }
 
     const onSelectCountry = (val: any) => {
         console.warn(val)
     }
 
-    const { withFrame, inputContainer } = styles;
+
 
     return <View flex bg-bgColor>
         <View marginB-90 flex centerV paddingH-20>
@@ -28,66 +54,54 @@ const Register: ScreenComponent<PreviousScreenProps> = ({ componentId, shouldPop
             <Text center marginB-15 marginT-8 textColorLight font13>{`Register with Dispatcher today to startconnection\nwith your family and friends\naround the world :).`}</Text>
 
             <View centerH marginT-30 marginB-20>
-                <TextField
-                    placeholder="Username"
-                    style={{
-                        paddingLeft: s(15),
-                        fontSize: ms(14),
+                <CustomTextField
+                    name="username"
+                    control={control}
+                    textFieldProps={{
+                        placeholder: "Username"
                     }}
-                    fieldStyle={withFrame}
-                    //@ts-ignore
-                    containerStyle={inputContainer}
                 />
-                <TextField
-                    placeholder="Enter Phone Number"
-                    fieldStyle={withFrame}
-                    //@ts-ignore
-                    containerStyle={inputContainer}
-                    style={{
-                        fontSize: ms(14),
+                <CustomTextField
+                    name="phone_number"
+                    control={control}
+                    textFieldProps={{
+                        placeholder: "Enter Phone Number",
+                        keyboardType: "number-pad",
+                        leadingAccessory: (<View>
+                            <CountryPicker
+                                containerButtonStyle={{
+                                    paddingHorizontal: ms(10)
+                                }}
+                                onSelect={onSelectCountry}
+                                countryCode="US"
+                                withFilter
+                                withFlag
+                                withCallingCode
+                                withCallingCodeButton
+                            /></View>)
                     }}
-                    keyboardType="number-pad"
-                    placeholderTextColor={Colors.grey20}
-                    leadingAccessory={(<View>
-                        <CountryPicker
-                            containerButtonStyle={{
-                                paddingHorizontal: ms(10)
-                            }}
-                            onSelect={onSelectCountry}
-                            // theme={DARK_THEME}
-                            countryCode="US"
-                            withFilter
-                            withFlag
-                            withCallingCode
-                            withCallingCodeButton
-                        /></View>)}
                 />
 
-                <TextField
-                    secureTextEntry
-                    placeholder="Password"
-                    style={{
-                        paddingLeft: s(15),
-                        fontSize: ms(14),
+                <CustomTextField
+                    name="password"
+                    control={control}
+                    textFieldProps={{
+                        placeholder: "Password",
+                        secureTextEntry: true
                     }}
-                    fieldStyle={withFrame}
-                    //@ts-ignore
-                    containerStyle={inputContainer}
                 />
-                <TextField
-                    secureTextEntry
-                    placeholder="Confirm password"
-                    style={{
-                        paddingLeft: s(15),
-                        fontSize: ms(14),
+
+                <CustomTextField
+                    name="password_confirmation"
+                    control={control}
+                    textFieldProps={{
+                        placeholder: "Password Confirmation",
+                        secureTextEntry: true
                     }}
-                    fieldStyle={withFrame}
-                    //@ts-ignore
-                    containerStyle={inputContainer}
                 />
             </View>
             <CustomButton
-                onPress={() => screens.push(componentId, 'RegisterOPT')} title="Register" />
+                onPress={handleSubmit(onSubmit)} title="Register" />
             <Text marginT-10 font13b center grey20>
                 <Text>{`Already has an account? `}</Text>
                 <Text

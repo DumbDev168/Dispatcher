@@ -1,15 +1,15 @@
 import {Colors} from 'react-native-ui-lib';
-import {ScaledSheet} from 'react-native-size-matters';
-const styles = ScaledSheet.create({
+import {ScaledSheet, s, vs, ms} from 'react-native-size-matters';
+const styles: any = ScaledSheet.create({
   withFrame: {
     borderWidth: 0.5,
     borderColor: Colors.$outlineDisabledHeavy,
-    paddingVertical: '10@ms',
-    borderRadius: '5@ms',
+    paddingVertical: ms(10),
+    borderRadius: ms(5),
   },
   inputContainer: {
-    width: '280@s',
-    marginBottom: '15@vs',
+    width: vs(280),
+    marginBottom: s(4),
   },
 });
 

@@ -23,4 +23,4 @@ export const beforeStart = async (): PVoid => {
   await initServices();
 };
 
-export const App = () => Root(Screen(screens.get('Home'))); // or Root(Stack(Component(screens.get('Main'))))
+export const App = () => Root(Screen(screens.get('Register'))); // or Root(Stack(Component(screens.get('Main'))))
