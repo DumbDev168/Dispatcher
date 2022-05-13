@@ -9,7 +9,7 @@ const styles: any = ScaledSheet.create({
   },
   inputContainer: {
     width: vs(280),
-    marginBottom: s(4),
+    marginBottom: s(2),
   },
 });
 
