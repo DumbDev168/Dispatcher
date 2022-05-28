@@ -36,6 +36,14 @@ const screens = generateRNNScreens(
         },
       },
     },
+    Dashboard: {
+      component: require('@screens/Dashboard').default,
+      options: {
+        topBar: {
+          ...withTitle('Authenciated Dashboard'),
+        },
+      },
+    },
   },
   [withServices],
 );

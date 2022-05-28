@@ -47,6 +47,7 @@
       "@services/*": ["./src/services/*"],
       "@stores/*": ["./src/stores/*"],
       "@utils/*": ["./src/utils/*"],
+      "@configs/*": ["./src/configs/*"],
       "@types/*": ["./src/types/*"]
     } /* A series of entries which re-map imports to lookup locations relative to the 'baseUrl'. */,
     // "rootDirs": [],                        /* List of root folders whose combined content represents the structure of the project at runtime. */

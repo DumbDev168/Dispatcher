@@ -23,6 +23,7 @@ let plugins = [
         '@stores': './src/stores',
         '@utils': './src/utils',
         '@types': './src/types',
+        '@configs': './src/configs',
       },
     },
   ],

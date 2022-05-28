@@ -1,5 +1,5 @@
-import React, { useState } from "react"
-import { View, Text } from "react-native-ui-lib"
+import React, { useState, useEffect } from "react"
+import { View, Text, Colors } from "react-native-ui-lib"
 import { ms } from "react-native-size-matters"
 import CustomButton from "@components/CustomButton";
 import { screens } from ".."
@@ -13,6 +13,7 @@ import { ScrollView } from "react-native"
 import useDynamicRef from "use-dynamic-refs"
 import generateRef, { IRefKey } from "@utils/generateOnSubmitRef"
 import _isEmpty from "lodash/isEmpty"
+import { useStore } from "@stores/useStore"
 
 interface IRegister {
     username: string;
@@ -59,6 +60,9 @@ const refKeys: IRefKey[] = [
 
 const Register: ScreenComponent<PreviousScreenProps> = ({ componentId, shouldPop }) => {
 
+    const { register, isLoading, registerSuccess } = useStore(state => state);
+
+    // console.warn('isLoading', isLoading)
     const { control, formState, handleSubmit } = useForm<IRegister>({
         mode: "onChange",
         resolver: yupResolver(schema)
@@ -73,18 +77,22 @@ const Register: ScreenComponent<PreviousScreenProps> = ({ componentId, shouldPop
         return generateRef(index, refKeys, setRef, getRef)
     }
 
-
+    useEffect(() => {
+        if (registerSuccess) {
+            screens.push(componentId, "RegisterOPT")
+        }
+    }, [registerSuccess])
 
     const onSubmit = (data: IRegister) => {
         const dataSend = {
             ...data,
             phone_number: `+${callingCode}${data.phone_number}`
         }
-        console.warn('data', data)
-        console.warn('datasend', dataSend)
+        register(dataSend);
     }
 
     const onSelectCountry = (val: Country) => {
+        //  console.warn(val)
         setCountryCode(val.cca2)
         setCallingCode(val.callingCode[0]);
     }
@@ -119,11 +127,12 @@ const Register: ScreenComponent<PreviousScreenProps> = ({ componentId, shouldPop
                             keyboardType: "number-pad",
                             leadingAccessory: (<View>
                                 <CountryPicker
+
                                     containerButtonStyle={{
                                         paddingHorizontal: ms(10)
                                     }}
                                     onSelect={onSelectCountry}
-                                    countryCode="US"
+                                    countryCode={countryCode}
                                     withFilter
                                     withFlag
                                     withCallingCode
@@ -155,10 +164,11 @@ const Register: ScreenComponent<PreviousScreenProps> = ({ componentId, shouldPop
                     />
                 </View>
                 <CustomButton
+                    isLoading={isLoading}
                     onPress={handleSubmit(onSubmit)}
                     title="Register"
                     buttonProps={{
-                        disabled: !isValid || !_isEmpty(errors) || _isEmpty(dirtyFields)
+                        disabled: isLoading || !isValid || !_isEmpty(errors) || _isEmpty(dirtyFields)
                     }}
                 />
                 <Text marginT-10 font13b center grey20>

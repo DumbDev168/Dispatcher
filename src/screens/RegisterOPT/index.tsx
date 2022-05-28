@@ -1,19 +1,43 @@
-import React, { useRef, useCallback, useEffect } from "react"
+import React, { useRef, useCallback, useEffect, useState } from "react"
 import { View, Text, Colors } from "react-native-ui-lib"
 import { vs, ms, s } from "react-native-size-matters"
 import CustomButton from "@components/CustomButton";
 import { screens } from ".."
 import { ScreenComponent } from "rnn-screens"
 import OtpInputs, { OtpInputsRef } from 'react-native-otp-inputs';
-
+import { useStore } from "@stores/useStore";
 
 const RegisterOPT: ScreenComponent = ({ componentId }) => {
     const otpRef = useRef<OtpInputsRef>()
-    const onSelectCountry = (val: any) => {
-        console.warn(val)
-    }
+    const { registeredUser, isLoading, verifyRegisterAccount } = useStore(state => state)
+
+    // console.warn('isLoading', isLoading)
+    const [code, setCode] = useState<string>();
+
 
     useEffect(() => {
+        console.warn('dataSend', {
+            code: code,
+            phone_number: registeredUser?.phone_number || ""
+        })
+        if (code?.length === 6) {
+            verifyRegisterAccount({
+                code: code,
+                phone_number: registeredUser?.phone_number || ""
+            })
+        }
+    }, [code, registeredUser])
+
+    useEffect(() => {
+        if (!registeredUser) {
+            screens.pop(componentId)
+        }
+    }, [registeredUser])
+
+    useEffect(() => {
+        useStore.setState({
+            registerSuccess: false
+        })
         focusOTP()
     }, [])
 
@@ -62,7 +86,10 @@ const RegisterOPT: ScreenComponent = ({ componentId }) => {
                         borderRadius: ms(15),
                         paddingHorizontal: s(5)
                     }}
-                    handleChange={(code) => console.log(code)}
+                    handleChange={(code) => {
+                        setCode(code)
+                    }}
+                    // editable={!isLoading}
                     numberOfInputs={6}
                     autofillFromClipboard
                 />
@@ -71,7 +98,12 @@ const RegisterOPT: ScreenComponent = ({ componentId }) => {
 
             <CustomButton
                 onPress={() => console.warn('RegisterOPT')}
-                title="Resend Code" />
+                title="Resend Code"
+                buttonProps={{
+                    disabled: isLoading
+                }}
+
+            />
             <Text font13 center marginT-5 textColorLight>Do not received the code?</Text>
         </View>
 
